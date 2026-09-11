@@ -42,7 +42,7 @@ Codex подхватывает скилл по `name`/`description` из шап�
 |---|---|
 | `SKILL.md` | алгоритм девяти этапов, входы/выходы, запреты, чек-лист перед выдачей |
 | `references/rules.md` | свод правил клуба: роли, порядок ночи, переходы карт, победа, регламент дня, термины |
-| `references/host-sheet-legend.md`, `host-questions.md`, `host-answers.md` | лист ведущего: канон бланка и пояснения самого ведущего |
+| `references/host-sheet-example.md`, `host-sheet-legend.md`, `host-questions.md`, `host-answers.md` | лист ведущего: схема бланка и обезличенный пример с расшифровкой, канон бланка, легенда знаков, уточнения ведущего |
 | `references/pipeline-and-pitfalls.md` | конвейер сервиса шаг за шагом и грабли живых прогонов |
 | `references/article-style.md` | форма статьи, эталон, стиль, хеджи, чем меряется качество |
 | `references/scoring.md` | формула оценок, базы по ролям, сигналы, кандидаты номинаций |

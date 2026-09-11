@@ -35,7 +35,7 @@ flowchart LR
 
 | Этап скилла | Шаг конвейера | Вход → выход | Опора в `references/` |
 |---|---|---|---|
-| 1. Лист → каркас фактов | SHEET_VISION, A1 | фото/текст листа → состав, роли, ночи, дни | `host-sheet-legend.md`, `host-answers.md`, `prompts/sheet_vision.v1.md` |
+| 1. Лист → каркас фактов | SHEET_VISION, A1 | фото/текст листа → состав, роли, ночи, дни | `host-sheet-example.md`, `host-sheet-legend.md`, `host-answers.md`, `prompts/sheet_vision.v1.md` |
 | 2. Две дорожки → расшифровка | TRANSCRIBE, STITCH, HOST_ID, TRANSCRIPT_POLISH | транскрипции → `transcript.md` | `prompts/transcribe.v3.md`, `host_id.v3.md`, `transcript_polish.v1.md`, `pipeline-and-pitfalls.md` §2 |
 | 3. События ведущего и фазы | HOST_EVENTS, PHASE_RECON | реплики ведущего → события, дни/ночи | `prompts/host_events.v7.md`, `phase_recon.v3.md`, `schemas/event_draft_set.v1.json` |
 | 4. Заявления игроков | CLAIMS | речь по кругам → заявления с целями | `prompts/claims.v2.md`, `schemas/claim_set.v1.json` |
@@ -104,6 +104,7 @@ SKILL.md                      алгоритм и правила (читает C
 ARCHITECTURE.md               этот документ
 references/
   rules.md                    свод правил клуба (генерируется из rule_set_v1.json сервиса)
+  host-sheet-example.md       схема бланка, обезличенный пример, легенда знаков, уточнения ведущего
   host-sheet-legend.md        канон бланка листа
   host-questions.md           закрытые вопросы по листу
   host-answers.md             ответы ведущего по правилам, листу, номинациям

@@ -33,8 +33,10 @@ description: Разбор партии клубной «Мафии» (Mafia IT P
 
 ### 1. Лист ведущего → каркас фактов
 
-Читай по `references/host-sheet-legend.md` (канон бланка) и `references/host-answers.md`
-(как ведущий сам читает свой лист). Промт распознавания — `references/prompts/sheet_vision.v1.md`,
+Читай по `references/host-sheet-example.md` (схема бланка, обезличенный заполненный
+пример, сводная легенда знаков, уточнения ведущего и типовые грабли чтения фото), затем
+`references/host-sheet-legend.md` (канон бланка) и `references/host-answers.md` (как
+ведущий сам читает свой лист). Промт распознавания — `references/prompts/sheet_vision.v1.md`,
 схема — `references/schemas/host_sheet_extraction.v1.json`.
 
 Выпиши во внутренний `facts.md`:
