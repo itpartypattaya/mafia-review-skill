@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "mafia/transcript_readable/v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "lines"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "lines": {
+      "type": "array",
+      "maxItems": 4000,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "text", "join_previous"],
+        "properties": {
+          "id": {"type": "integer", "minimum": 1},
+          "text": {"type": "string", "minLength": 1, "maxLength": 4000},
+          "join_previous": {"type": "boolean"}
+        }
+      }
+    }
+  }
+}

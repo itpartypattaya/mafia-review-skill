@@ -1,0 +1,84 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "mafia/speaker_map/v2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "mappings"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": 2
+    },
+    "mappings": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 40,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "speaker_label",
+          "seat_no",
+          "status",
+          "evidence_methods",
+          "basis_segment_ids",
+          "self_reported_confidence_milli"
+        ],
+        "properties": {
+          "speaker_label": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 100
+          },
+          "seat_no": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 1,
+            "maximum": 30
+          },
+          "status": {
+            "enum": [
+              "CONFIRMED",
+              "HIGH",
+              "AMBIGUOUS",
+              "UNKNOWN"
+            ]
+          },
+          "basis_segment_ids": {
+            "type": "array",
+            "maxItems": 30,
+            "items": {
+              "type": "integer",
+              "minimum": 1
+            }
+          },
+          "self_reported_confidence_milli": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 0,
+            "maximum": 1000
+          },
+          "evidence_methods": {
+            "type": "array",
+            "maxItems": 4,
+            "uniqueItems": true,
+            "items": {
+              "enum": [
+                "circle_turn",
+                "direct_address",
+                "self_naming",
+                "second_track"
+              ]
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "mafia/host_identification/v3",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "host_label", "candidate_status", "speech_share_milli",
+    "phrase_marker_count", "host_segment_ids", "basis_segment_ids",
+    "host_speaker_label", "collision_suspected", "self_reported_confidence_milli"
+  ],
+  "properties": {
+    "schema_version": {"const": 3},
+    "host_label": {"enum": ["HOST", "UNKNOWN"]},
+    "candidate_status": {"enum": ["CANDIDATE", "AMBIGUOUS", "UNKNOWN"]},
+    "speech_share_milli": {"type": ["integer", "null"], "minimum": 0, "maximum": 1000},
+    "phrase_marker_count": {"type": "integer", "minimum": 0, "maximum": 100000},
+    "host_segment_ids": {"type": "array", "maxItems": 4000, "items": {"type": "integer", "minimum": 1}},
+    "basis_segment_ids": {"type": "array", "maxItems": 100, "items": {"type": "integer", "minimum": 1}},
+    "host_speaker_label": {"type": ["string", "null"], "maxLength": 32},
+    "collision_suspected": {"type": "boolean"},
+    "self_reported_confidence_milli": {"type": ["integer", "null"], "minimum": 0, "maximum": 1000}
+  }
+}

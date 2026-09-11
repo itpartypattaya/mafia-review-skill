@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "mafia/claim_set/v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "claims"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "claims": {
+      "type": "array",
+      "maxItems": 512,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "claim_type", "speaker_label", "summary", "target_seats",
+          "basis_segment_ids", "self_reported_confidence_milli"
+        ],
+        "properties": {
+          "claim_type": {
+            "enum": ["accusation", "defense", "nomination", "vote_intent", "table_statement"]
+          },
+          "speaker_label": {"type": "string", "minLength": 1, "maxLength": 100},
+          "summary": {"type": "string", "minLength": 1, "maxLength": 500},
+          "target_seats": {
+            "type": "array", "maxItems": 15,
+            "items": {"type": "integer", "minimum": 1, "maximum": 30}
+          },
+          "basis_segment_ids": {
+            "type": "array", "minItems": 1, "maxItems": 30,
+            "items": {"type": "integer", "minimum": 1}
+          },
+          "self_reported_confidence_milli": {
+            "type": ["integer", "null"], "minimum": 0, "maximum": 1000
+          }
+        }
+      }
+    }
+  }
+}

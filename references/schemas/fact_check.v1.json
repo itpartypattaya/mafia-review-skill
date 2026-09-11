@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "mafia/fact_check/v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "violations"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "violations": {
+      "type": "array", "maxItems": 100,
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["code", "block_index", "detail"],
+        "properties": {
+          "code": {"enum": ["UNGROUNDED_FACT", "HARD_CLAIM", "OPINION_AS_FACT", "VERBATIM_QUOTE", "HIDDEN_INFO", "OTHER_GROUNDING"]},
+          "block_index": {"type": ["integer", "null"], "minimum": 0, "maximum": 999},
+          "detail": {"type": "string", "minLength": 1, "maxLength": 500}
+        }
+      }
+    }
+  }
+}

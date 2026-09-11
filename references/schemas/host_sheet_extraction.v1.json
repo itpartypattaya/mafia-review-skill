@@ -1,0 +1,156 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "mafia/host_sheet_extraction/v1",
+  "title": "host_sheet_extraction v1",
+  "description": "Структурированный выход шага SHEET_VISION по легенде листа v1 (docs/02-host-sheet-legend.md). Открытые поля HS-7/HS-8 хранятся как raw и не интерпретируются.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "sheet_template_version",
+    "game_number_of_evening",
+    "players",
+    "roles",
+    "day_votes",
+    "nights",
+    "fouls",
+    "self_reported_confidence",
+    "needs_review"
+  ],
+  "properties": {
+    "schema_version": { "const": 1 },
+    "sheet_template_version": { "enum": ["v1", "v2"] },
+    "game_number_of_evening": {
+      "description": "Рукописная надпись внизу: «ИГРА N2» или голая цифра. null — не найдена.",
+      "type": ["integer", "null"],
+      "minimum": 1,
+      "maximum": 4
+    },
+    "players": {
+      "description": "Блок B, колонка «№ / ИМЯ». Номер печатной строки = место.",
+      "type": "array",
+      "maxItems": 20,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["seat_no", "name_raw", "struck_out"],
+        "properties": {
+          "seat_no": { "type": "integer", "minimum": 1, "maximum": 20 },
+          "name_raw": { "type": "string", "maxLength": 64 },
+          "struck_out": {
+            "description": "true — зачёркнут (выбыл). false — НЕТ ДАННЫХ, не «жив».",
+            "type": "boolean"
+          },
+          "eliminated_dash_from_day": {
+            "description": "Номер дня, с которого через строку идёт длинный прочерк; null — нет.",
+            "type": ["integer", "null"],
+            "minimum": 1,
+            "maximum": 7
+          }
+        }
+      }
+    },
+    "roles": {
+      "description": "Блок A + список мирных зоны D. seat — строго из скобки «ИМЯ (N)». Роли с прочерком в клетке имени сюда не попадают.",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["role_code", "label_raw", "seat_no", "name_raw", "struck_out"],
+        "properties": {
+          "role_code": { "type": "string", "pattern": "^[a-z_]+$" },
+          "label_raw": { "description": "Печатный или рукописный ярлык как на листе («НАСЛЕДНИК», «МИР 3»).", "type": "string" },
+          "seat_no": { "type": ["integer", "null"], "minimum": 1, "maximum": 20 },
+          "name_raw": { "type": "string" },
+          "struck_out": { "type": "boolean" },
+          "note": { "description": "Стрелки, вторая роль у места, дописки — всё, что требует человека (HS-4).", "type": "string" }
+        }
+      }
+    },
+    "roles_absent": {
+      "description": "Роли с прочерком «—» в клетке имени блока A: в партии отсутствуют.",
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "day_votes": {
+      "description": "Блок B: палочки в клетке игрок × день. Пустая клетка не включается либо tally_count = 0.",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["day", "seat_no", "tally_count"],
+        "properties": {
+          "day": { "type": "integer", "minimum": 1, "maximum": 7 },
+          "seat_no": { "type": "integer", "minimum": 1, "maximum": 20 },
+          "tally_count": { "description": "Только палочки. Пятая перечёркивает четыре.", "type": "integer", "minimum": 0, "maximum": 20 },
+          "side_number_raw": { "description": "HS-7: цифра рядом с палочками, как написана. Не интерпретируется.", "type": ["string", "null"] },
+          "marks_raw": { "description": "HS-8: иные пометки в клетке («+», «—»), как написаны.", "type": ["string", "null"] }
+        }
+      }
+    },
+    "day_hands": {
+      "description": "Руки за выгон. До закрытия HS-7 НЕ заполняется в v1.",
+      "type": "array",
+      "maxItems": 0
+    },
+    "nights": {
+      "type": "array",
+      "maxItems": 7,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["night", "actions"],
+        "properties": {
+          "night": { "type": "integer", "minimum": 1, "maximum": 7 },
+          "actions": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["role_code", "state"],
+              "properties": {
+                "role_code": { "type": "string" },
+                "state": { "enum": ["performed", "no_action", "not_applicable", "unreadable"] },
+                "target_seat": { "description": "Только при однозначном резолве имени в players[].", "type": ["integer", "null"], "minimum": 1, "maximum": 20 },
+                "target_name_raw": { "description": "Имя цели как на листе (HS-9: часто сокращённое).", "type": ["string", "null"] }
+              }
+            }
+          }
+        }
+      }
+    },
+    "fouls": {
+      "description": "Только шаблон v2. Для v1 — пустой массив (инвариант 4 легенды).",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["seat_no", "count"],
+        "properties": {
+          "seat_no": { "type": "integer", "minimum": 1, "maximum": 20 },
+          "count": { "type": "integer", "minimum": 0, "maximum": 4 }
+        }
+      }
+    },
+    "self_reported_confidence": {
+      "description": "Самооценка модели по блокам, 0..1. Не калиброванная вероятность.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["roster", "roles", "votes", "nights"],
+      "properties": {
+        "roster": { "type": "number", "minimum": 0, "maximum": 1 },
+        "roles": { "type": "number", "minimum": 0, "maximum": 1 },
+        "votes": { "type": "number", "minimum": 0, "maximum": 1 },
+        "nights": { "type": "number", "minimum": 0, "maximum": 1 }
+      }
+    },
+    "needs_review": {
+      "description": "true — на листе есть то, что модель не взялась интерпретировать (HS-4, конфликт имён, нечитаемость).",
+      "type": "boolean"
+    },
+    "review_notes": {
+      "type": "array",
+      "items": { "type": "string", "maxLength": 300 }
+    }
+  }
+}

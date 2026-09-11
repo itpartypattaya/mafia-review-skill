@@ -1,0 +1,37 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "mafia/phase_recon/v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "spans"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "spans": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 100,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "span_index", "phase", "phase_no", "start_ms", "end_ms", "event_indexes",
+          "self_reported_confidence_milli"
+        ],
+        "properties": {
+          "span_index": {"type": "integer", "minimum": 0, "maximum": 99},
+          "phase": {"enum": ["day", "night", "final"]},
+          "phase_no": {"type": "integer", "minimum": 1, "maximum": 20},
+          "start_ms": {"type": "integer", "minimum": 0, "maximum": 86400000},
+          "end_ms": {"type": "integer", "minimum": 1, "maximum": 86400000},
+          "event_indexes": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 512,
+            "items": {"type": "integer", "minimum": 0, "maximum": 999}
+          },
+          "self_reported_confidence_milli": {"type": ["integer", "null"], "minimum": 0, "maximum": 1000}
+        }
+      }
+    }
+  }
+}

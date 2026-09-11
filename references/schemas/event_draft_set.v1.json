@@ -1,0 +1,50 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "mafia/event_draft_set/v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "events"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "events": {
+      "type": "array",
+      "maxItems": 512,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "event_index", "event_type", "phase_hint", "phase_no_hint", "seat_no",
+          "target_seat", "rule_action", "winner_side_hint", "detail_summary", "basis_segment_ids",
+          "self_reported_confidence_milli"
+        ],
+        "properties": {
+          "event_index": {"type": "integer", "minimum": 0, "maximum": 999},
+          "event_type": {"enum": [
+            "game_start", "day_start", "night_result_announced", "speech_round_start",
+            "defense_start", "vote_start", "expelled", "balagan", "final_roster",
+            "winner_announced", "other_public"
+          ]},
+          "phase_hint": {"enum": ["day", "night", "final", "unknown"]},
+          "phase_no_hint": {"type": ["integer", "null"], "minimum": 1, "maximum": 20},
+          "seat_no": {"type": ["integer", "null"], "minimum": 1, "maximum": 30},
+          "target_seat": {"type": ["integer", "null"], "minimum": 1, "maximum": 30},
+          "rule_action": {"enum": [
+            "none", "foul_removed", "left_unrevealed", "role_transformed"
+          ]},
+          "winner_side_hint": {
+            "type": ["string", "null"],
+            "enum": ["red", "black", "neutral", "none", null]
+          },
+          "detail_summary": {"type": "string", "maxLength": 500},
+          "basis_segment_ids": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 30,
+            "items": {"type": "integer", "minimum": 1}
+          },
+          "self_reported_confidence_milli": {"type": ["integer", "null"], "minimum": 0, "maximum": 1000}
+        }
+      }
+    }
+  }
+}

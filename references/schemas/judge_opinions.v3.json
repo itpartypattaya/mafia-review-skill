@@ -1,0 +1,162 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "mafia/judge_opinions/v3",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "opinions",
+    "nominations"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": 3
+    },
+    "opinions": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 30,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "subject_profile_id",
+          "signals",
+          "comment",
+          "self_reported_confidence_milli"
+        ],
+        "properties": {
+          "subject_profile_id": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "signals": {
+            "description": "Наблюдения за публичной игрой участника. Цифру считает формула; здесь — только что он делал и насколько это весило.",
+            "type": "array",
+            "maxItems": 24,
+            "items": {
+              "$ref": "#/$defs/signal"
+            }
+          },
+          "comment": {
+            "description": "Одна-две фразы игроку: что в его партии было главным. Едет в комментарий к оценке.",
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 400
+          },
+          "self_reported_confidence_milli": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 0,
+            "maximum": 1000
+          }
+        }
+      }
+    },
+    "nominations": {
+      "description": "Формулировки для переданных кандидатов: выбрать до трёх, каждому — название и причина.",
+      "type": "array",
+      "maxItems": 3,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "candidate_code",
+          "emoji",
+          "label",
+          "reason"
+        ],
+        "properties": {
+          "candidate_code": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 40
+          },
+          "emoji": {
+            "type": "string",
+            "maxLength": 8
+          },
+          "label": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 120
+          },
+          "reason": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 500
+          }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "signal": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "skill",
+        "direction",
+        "strength",
+        "basis",
+        "note"
+      ],
+      "properties": {
+        "skill": {
+          "enum": [
+            "analysis",
+            "intuition",
+            "influence",
+            "discipline"
+          ]
+        },
+        "direction": {
+          "description": "positive — поступок помог его стороне или показал понимание стола; negative — навредил или показал ошибку.",
+          "enum": [
+            "positive",
+            "negative"
+          ]
+        },
+        "strength": {
+          "description": "1 — эпизод; 2 — заметный поступок; 3 — поступок, решивший фазу или партию.",
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 3
+        },
+        "basis": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 10,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "kind",
+              "id"
+            ],
+            "properties": {
+              "kind": {
+                "enum": [
+                  "fact",
+                  "claim"
+                ]
+              },
+              "id": {
+                "type": "integer",
+                "minimum": 1
+              }
+            }
+          }
+        },
+        "note": {
+          "description": "Что именно сделал игрок — одна фраза по basis, без цитат и без догадок о роли.",
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 160
+        }
+      }
+    }
+  }
+}

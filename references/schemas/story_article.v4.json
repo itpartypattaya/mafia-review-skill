@@ -1,0 +1,69 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "mafia/story_article/v4",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "title", "lead", "phases", "decisive", "why_lost", "best_moves", "mistakes", "conclusion"],
+  "properties": {
+    "schema_version": {"const": 4},
+    "title": {
+      "description": "Короткое название партии — про её суть, 3–7 слов. Дата и номер уже в шапке.",
+      "type": "string", "minLength": 1, "maxLength": 120
+    },
+    "lead": {
+      "description": "Ключевой момент партии одним-тремя предложениями: что стол не знал, а лист показывает; кто победил и на каком дне.",
+      "type": "string", "minLength": 1, "maxLength": 600
+    },
+    "phases": {
+      "description": "К каждой фазе хронологии — абзац о том, что в ней происходило и что это значило. Подпись фазы не нужна: заголовок «День N» ставит страница.",
+      "type": "array", "maxItems": 40,
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["phase", "phase_no", "narrative"],
+        "properties": {
+          "phase": {"enum": ["day", "night"]},
+          "phase_no": {"type": "integer", "minimum": 1, "maximum": 20},
+          "narrative": {"$ref": "#/$defs/block"}
+        }
+      }
+    },
+    "decisive": {
+      "description": "Что решило игру: 3–5 пунктов, каждый — одно решение или ход с последствием.",
+      "type": "array", "minItems": 1, "maxItems": 6,
+      "items": {"$ref": "#/$defs/block"}
+    },
+    "why_lost": {
+      "description": "Почему проиграла проигравшая сторона: 1–3 абзаца связной логики, а не список.",
+      "type": "array", "minItems": 1, "maxItems": 3,
+      "items": {"$ref": "#/$defs/block"}
+    },
+    "best_moves": {
+      "description": "Лучшие ходы: 2–6 пунктов, по сторонам и игрокам, с указанием, чем ход обернулся.",
+      "type": "array", "minItems": 1, "maxItems": 6,
+      "items": {"$ref": "#/$defs/block"}
+    },
+    "mistakes": {
+      "description": "Ключевые ошибки: 2–6 пунктов, названные прямо, по игрокам и по столу.",
+      "type": "array", "minItems": 1, "maxItems": 6,
+      "items": {"$ref": "#/$defs/block"}
+    },
+    "conclusion": {
+      "description": "Итог: один-два абзаца — за счёт чего победа и главный урок партии.",
+      "type": "array", "minItems": 1, "maxItems": 3,
+      "items": {"$ref": "#/$defs/block"}
+    }
+  },
+  "$defs": {
+    "block": {
+      "type": "object", "additionalProperties": false,
+      "required": ["sentence_type", "text", "fact_ids", "claim_id", "judge_opinion_id"],
+      "properties": {
+        "sentence_type": {"enum": ["verified_fact", "sheet_fact", "inferred_claim", "opinion", "editorial"]},
+        "text": {"type": "string", "minLength": 1, "maxLength": 1600},
+        "fact_ids": {"type": "array", "maxItems": 30, "items": {"type": "integer", "minimum": 1}},
+        "claim_id": {"type": ["integer", "null"], "minimum": 1},
+        "judge_opinion_id": {"type": ["integer", "null"], "minimum": 1}
+      }
+    }
+  }
+}
