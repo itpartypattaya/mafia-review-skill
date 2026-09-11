@@ -13,12 +13,13 @@ flowchart LR
         T1 & T2 & S --> R["9 этапов<br/>(см. §2)"]
         R --> Q[questions.md] -. ответы ведущего .-> R
         R --> REV[review.md]
+        R --> F[facts.md]
         R --> TR[transcript.md]
         R --> CP[cover-prompt.md] --> BAN[banner.png]
     end
     subgraph Сервис["mafia.itparty.club"]
         S --> SV["SHEET_VISION<br/>(Gemini, копейки)"] --> A1G["гейт A1<br/>состав, роли, ночи"]
-        REV & BAN --> IMP["POST /review-import"]
+        REV & BAN & F & TR --> IMP["POST /review-import"]
         A1G --> IMP
         IMP --> D["черновики:<br/>исход · оценки · номинации ·<br/>статья + обложка"]
         D --> PUB["«Опубликовать»<br/>manual FULL"] --> PAGE["/games/N<br/>рейтинг, XP, рекап"]
@@ -38,7 +39,7 @@ flowchart LR
 | 2. Две дорожки → расшифровка | TRANSCRIBE, STITCH, HOST_ID, TRANSCRIPT_POLISH | транскрипции → `transcript.md` | `prompts/transcribe.v3.md`, `host_id.v3.md`, `transcript_polish.v1.md`, `pipeline-and-pitfalls.md` §2 |
 | 3. События ведущего и фазы | HOST_EVENTS, PHASE_RECON | реплики ведущего → события, дни/ночи | `prompts/host_events.v7.md`, `phase_recon.v3.md`, `schemas/event_draft_set.v1.json` |
 | 4. Заявления игроков | CLAIMS | речь по кругам → заявления с целями | `prompts/claims.v2.md`, `schemas/claim_set.v1.json` |
-| 5. Сверка листа с записью → **стоп** | RULE_SIMULATOR, гейт A2 | конфликты → `questions.md` → ответы ведущего | `code/scoring.py::build_timeline`, `templates/questions.md` |
+| 5. Сверка листа с записью → **стоп** | RULE_SIMULATOR, гейт A2 | `facts.md` (состав, ночи по листу, хронология по записи) + конфликты → `questions.md` → ответы ведущего | `templates/facts.md`, `code/scoring.py::build_timeline`, `templates/questions.md` |
 | 6. Оценки и номинации | JUDGE + формула | факты + заявления → сигналы → оценки, кандидаты → номинации | `scoring.md`, `code/scoring.py`, `prompts/judge.v6.md` |
 | 7. Статья | STORY, FACT_CHECK | данные + аналитика → разделы статьи, самопроверка | `article-style.md`, `code/article.py`, `prompts/story.v6.md`, `fact_check.v3.md` |
 | 8. Обложка | COVER | хронология → бриф → промт → `banner.png` | `templates/cover-prompt.md`, `prompts/cover.v3.md`, `code/cover_brief.py` |
@@ -88,6 +89,12 @@ flowchart LR
 4. ничего не публикует — это делает кнопка «Опубликовать»: снимки видимости, оценок,
    номинаций, ledger, рейтинг, рекап в группу.
 
+`facts.md` сервис читает как арбитра: если Gemini прочёл роль места иначе, чем `review.md`,
+а таблица «Состав A1» в `facts.md` согласна с файлом — принимается файл; таблица «Ночные
+действия по листу» даёт ночные ходы в A1, если ведущий подтвердил состав без них.
+`transcript.md` хранится рядом с партией как её расшифровка (в альтернативном пути аудио в
+сервис не попадает). Оба файла видны только персоналу.
+
 Полный контракт — `references/review-import-contract.md`.
 
 ## 5. Файловая карта и синхронизация
@@ -110,6 +117,7 @@ references/
   code/*.py                   scoring / article / cover_brief / rating / story как есть
 templates/
   review.md                   контракт на вымышленных именах (парсится тестом сервиса)
+  facts.md                    контракт facts.md (состав, ночные ходы — парсится сервисом)
   questions.md · transcript.md · cover-prompt.md
 ```
 

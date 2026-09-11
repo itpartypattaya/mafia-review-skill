@@ -27,13 +27,14 @@ Codex подхватывает скилл по `name`/`description` из шап�
 
 ## Использование
 
-1. В папку партии положить: `transcript-1.*`, `transcript-2.*` (txt/md/json с метками
-   говорящих и временем), фото или расшифровку листа ведущего, состав A1 (`№ — имя —
-   стартовая роль`).
+1. В папку партии положить: `transcript-1.*`, `transcript-2.*` (обычно сплошной текст
+   автоматической расшифровки диктофона без таймкодов и меток говорящих), фото или
+   расшифровку листа ведущего, состав A1 (`№ — имя — стартовая роль`).
 2. Сказать Codex: «Разбери партию по скиллу mafia-game-review, файлы в папке …».
 3. Ответить на `questions.md` — без ответов разбор дальше сверки не идёт.
-4. Забрать `review.md`, `banner.png` (или `cover-prompt.md`), `transcript.md`; загрузить
-   `review.md` + баннер в секцию «Готовый разбор» студии партии и нажать «Опубликовать».
+4. Забрать `review.md`, `facts.md`, `transcript.md`, `banner.png` (или `cover-prompt.md`);
+   загрузить `review.md` + баннер + `facts.md` + `transcript.md` в секцию «Готовый разбор»
+   студии партии и нажать «Опубликовать».
 
 ## Состав
 
@@ -50,7 +51,7 @@ Codex подхватывает скилл по `name`/`description` из шап�
 | `references/prompts/` | активные промты конвейера сервиса **дословно** (12 шагов) |
 | `references/schemas/` | JSON-схемы ответов этих шагов |
 | `references/code/` | `scoring.py`, `article.py`, `cover_brief.py`, `rating.py`, `story.py` как есть |
-| `templates/` | `review.md` (контракт на вымышленных именах), `questions.md`, `transcript.md`, `cover-prompt.md` |
+| `templates/` | `review.md` и `facts.md` (контракты парсера сервиса, на вымышленных именах), `questions.md`, `transcript.md`, `cover-prompt.md` |
 
 ## Откуда берётся и как обновляется
 
