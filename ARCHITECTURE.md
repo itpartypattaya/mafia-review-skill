@@ -40,10 +40,10 @@ flowchart LR
 | 3. События ведущего и фазы | HOST_EVENTS, PHASE_RECON | реплики ведущего → события, дни/ночи | `prompts/host_events.v7.md`, `phase_recon.v3.md`, `schemas/event_draft_set.v1.json` |
 | 4. Заявления игроков | CLAIMS | речь по кругам → заявления с целями | `prompts/claims.v2.md`, `schemas/claim_set.v1.json` |
 | 5. Сверка листа с записью → **стоп** | RULE_SIMULATOR, гейт A2 | `facts.md` (состав, ночи по листу, хронология по записи) + конфликты → `questions.md` → ответы ведущего | `templates/facts.md`, `code/scoring.py::build_timeline`, `templates/questions.md` |
-| 6. Оценки и номинации | JUDGE + формула | факты + заявления → сигналы → оценки, кандидаты → номинации | `scoring.md`, `code/scoring.py`, `prompts/judge.v6.md` |
+| 6. Оценки и номинации | JUDGE + формула | факты + заявления → сигналы → `scripts/score_review.py` → оценки и кандидаты | `scoring.md` §4a, `scripts/score_review.py`, `prompts/judge.v6.md` |
 | 7. Статья | STORY, FACT_CHECK | данные + аналитика → разделы статьи, самопроверка | `article-style.md`, `code/article.py`, `prompts/story.v6.md`, `fact_check.v3.md` |
 | 8. Обложка | COVER | хронология → бриф → промт → `banner.png` | `templates/cover-prompt.md`, `prompts/cover.v3.md`, `code/cover_brief.py` |
-| 9. Выходы и чек-лист | EDITORIAL_REVIEW | `review.md` по контракту | `review-import-contract.md`, `templates/review.md` |
+| 9. Выходы и чек-лист | EDITORIAL_REVIEW | комплект → `scripts/validate_review_bundle.py` → загрузка | `scripts/validate_review_bundle.py`, `review-import-contract.md`, `templates/review.md` |
 
 Две остановки с человеком — те же, что гейты конвейера: **A1** (состав и роли — только по
 листу) и **A2** (расхождения листа и записи решает ведущий, не агент).
@@ -100,8 +100,11 @@ flowchart LR
 ## 5. Файловая карта и синхронизация
 
 ```
-SKILL.md                      алгоритм и правила (читает Codex)
+SKILL.md                      алгоритм, канон фаз, маршрут чтения references (читает Codex)
 ARCHITECTURE.md               этот документ
+scripts/
+  score_review.py             оценки и кандидаты номинаций по формуле клуба (stdlib)
+  validate_review_bundle.py   проверка комплекта до загрузки в сервис (stdlib)
 references/
   rules.md                    свод правил клуба (генерируется из rule_set_v1.json сервиса)
   host-sheet-example.md       схема бланка, обезличенный пример, легенда знаков, уточнения ведущего
